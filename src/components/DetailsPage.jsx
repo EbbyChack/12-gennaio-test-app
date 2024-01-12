@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container } from "react-bootstrap";
+import { Container, Card, Row ,Col} from "react-bootstrap";
 
 const DetailsPage = (props) => {
   const [fetchData, setFetchData] = useState({});
@@ -24,21 +24,13 @@ const DetailsPage = (props) => {
 
   const formattedDatesArray = [];
 
-  if (fetchData.list && fetchData.list.length > 0) {
-    const date = new Date(fetchData.list[0].dt * 1000);
-    const options = {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: false,
-    };
-    const formattedDate = date.toLocaleDateString("en-US", options);
-    formattedDatesArray.push(formattedDate);
+  //   if (fetchData.list && fetchData.list.length > 0) {
+  //     const date = new Date(fetchData.list[0].dt * 1000);
 
-    console.log(formattedDatesArray);
-  }
+  //     formattedDatesArray.push(formattedDate);
+
+  //     console.log(formattedDatesArray);
+  //   }
 
   function kelvinToCelsius(kelvin) {
     return Math.round(kelvin - 273.15);
@@ -46,15 +38,37 @@ const DetailsPage = (props) => {
 
   return (
     <div>
-      <Container className="mt-5 pt-5 bg-light rounded-4 w-50">
+      <Container className="mt-5 pt-5 bg-light rounded-4">
         <h1>
           {fetchData.city && fetchData.city.name} , {fetchData.city && fetchData.city.country}{" "}
         </h1>
         <Container className="bg-white p-2 rounded-4 ">
-          <p className="fw-light">{formattedDatesArray[0]}</p>
-          <p>Temperature: {fetchData.list && kelvinToCelsius(fetchData.list[0].main.temp)} °</p>
-          <p>Weather: {fetchData.list && fetchData.list[0].weather[0].main}</p>
-          <p>Pressure: {fetchData.list && kelvinToCelsius(fetchData.list[0].main.pressure)} hPa</p>
+          <Row>
+            {fetchData.list &&
+              fetchData.list.map((forecast, index) => (
+                <Col xs={3}>
+                  <Card key={index} className="mb-3">
+                    <Card.Body>
+                      <Card.Title className="fw-light fs-5">
+                        {new Date(forecast.dt * 1000).toLocaleDateString("en-US", {
+                          weekday: "long",
+                          month: "long",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "numeric",
+                          hour12: false,
+                        })}
+                      </Card.Title>
+                      <Card.Text>Temperature: {kelvinToCelsius(forecast.main.temp)}°</Card.Text>
+                      <Card.Text>Weather: {forecast.weather[0].main}</Card.Text>
+                      <Card.Text>Pressure: {forecast.main.pressure} hPa</Card.Text>
+                      <Card.Text>Humidity: {forecast.main.humidity}%</Card.Text>
+                      <Card.Text>Cloudiness: {forecast.clouds.all}%</Card.Text>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              ))}
+          </Row>
         </Container>
       </Container>
     </div>
