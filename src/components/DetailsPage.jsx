@@ -46,7 +46,7 @@ const DetailsPage = (props) => {
           <Row>
             {fetchData.list &&
               fetchData.list.map((forecast, index) => (
-                <Col xs={3}>
+                <Col md={4} lg={3}>
                   <Card key={index} className="mb-3">
                     <Card.Body>
                       <Card.Title className="fw-light fs-5">
